@@ -94,6 +94,13 @@ function draw() {
     drawBricks()
 }
 
+
+function update() {
+
+    draw()
+    requestAnimationFrame(update)
+}
+
 // Rules open and close event handelers
 rulesBtn.addEventListener('click', () => {
     rules.classList.add('show')
