@@ -94,12 +94,14 @@ function draw() {
     drawBricks()
 }
 
-
+//Update canvas drawing and do animation
 function update() {
-
+    movePaddle()
     draw()
     requestAnimationFrame(update)
 }
+
+update()
 
 // Rules open and close event handelers
 rulesBtn.addEventListener('click', () => {
