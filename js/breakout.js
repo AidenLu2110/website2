@@ -99,6 +99,14 @@ function movePaddle() {
     paddle.x = paddle.x + paddle.dx
 }
 
+//wall detection
+if (paddle.x < 0) {
+    paddle.x = 0
+}
+if (paddle.x + paddle.w > canvas.width) {
+    paddle.x = canvas.width - paddle.w
+}
+
 //Keydown event
 function keyDown(e) {
     // console.log(e.key)
@@ -121,8 +129,80 @@ function keyUp(e) {
 document.addEventListener('keydown', keyDown)
 document.addEventListener('keyup', keyUp)
 
+function moveBall() {
+    ball.x = ball.x + ball.dx
+    ball.y = ball.y + ball.dy
+
+    //wall collision (top)
+    if (ball.y + ball.size < 0) {
+        ball.dy =  -1 * ball.dy
+    }
+
+    //wall collision (right)
+    if (ball.x + ball.size > canvas.width) + {
+        ball.dx = -1 * ball.dx
+    }
+
+    //wall colision (bottom)
+    if (ball.y + ball.size > canvas.height) {
+        ball.dy = -1 * ball.dy
+        showAllBricks(
+        score = 0
+        )
+    }
+    // wall collision (left)
+    if (ball.y + ball.size > canvas.width) {
+        ball.dy = -1 * ball.dy
+    }
+
+    //paddle collision
+    if (
+        ball.x - ball.size > paddle.x &&
+        ball.x + ball.size < paddle.x + paddle.w &&
+        ball.y + ball.size < paddle.y
+    ) {
+        ball.dy = -1 * ball.speed
+    }
+
+    //Brick collision
+    bricks.forEach(column => {
+        column.forEach(brick => {
+            if (brick.visible) {
+                if (
+                    ball.x - ball.size > brick.x && //left brick side
+                    ball.x + ball.size < brick.x + brick.w && //right
+                    ball.y + ball.size > brick.y && //top
+                    ball.y - ball.size < brick.y + brick.h //bottom
+                ) {
+                ball.dy = -1 * ball.dy
+                brick.visible.false
+                increaseScore()
+                }
+            }
+        })
+    })
+}
+
+function increaseScore() {
+    score++
+
+    if (score == brickRowCount * brickColumnCount) {
+        score = 0
+        showAllBricks()
+    }
+}
+
+function showAllBricks() {
+    bricks.forEach(column => {
+        column.forEach(brick => {
+            brick.visible = true
+        })
+    })
+}
+
 //Update canvas drawing and do animation
 function update() {
+    drawBall()
     movePaddle()
     draw()
     requestAnimationFrame(update)
